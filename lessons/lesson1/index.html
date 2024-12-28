@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lesson 1</title>
+  <style>
+    /* Make sure the html and body take up the full height of the window */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Center all content in the middle of the page (both horizontally and vertically) */
+    body {
+      display: flex;                /* Use Flexbox */
+      justify-content: center;      /* Center horizontally */
+      align-items: center;          /* Center vertically */
+      background-color: #f4f4f4;    /* Light gray background */
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    /* Container to wrap content */
+    .container {
+      max-width: 800px;
+      width: 90%;                   /* Optional: so it looks good on mobile screens too */
+      padding: 20px;
+      background-color: #ffffff;    /* White background for contrast */
+      border-radius: 8px;           /* Rounded corners */
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      font-size: 3em;              /* Make the heading bigger */
+      color: #333333;              /* Darker text color */
+      margin-bottom: 20px;
+    }
+
+    nav {
+      margin-bottom: 20px;
+    }
+
+    nav ul {
+      list-style: none;            /* Remove bullet points */
+      padding: 0;
+      margin: 0;
+    }
+
+    nav li {
+      display: inline-block;       /* Horizontal menu */
+      margin: 0 15px;
+    }
+
+    nav a {
+      text-decoration: none;
+      font-size: 1.2em;            /* Increase link text size */
+      color: #007BFF;             /* Blue link color */
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #0056b3;             /* Slightly darker on hover */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Lesson 1</h1>
+    <nav>
+      <ul>
+        <li><a href="phase1.html">Phase 1</a></li>
+        <li><a href="phase2.html">Phase 2</a></li>
+      </ul>
+    </nav>
+
+    <!-- If you want to embed phase1 & phase2 here (instead of linking) -->
+    <!--
+    <section id="phase1">
+      <h2>Phase 1</h2>
+      <p>Content for Phase 1 goes here...</p>
+    </section>
+    <section id="phase2">
+      <h2>Phase 2</h2>
+      <p>Content for Phase 2 goes here...</p>
+    </section>
+    -->
+  </div>
+</body>
+</html>
