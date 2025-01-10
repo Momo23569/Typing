@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Korean Typing Practice (Phase 2)</title>
+  <style>
+    /* 
+      We’ll use a flex container on the body
+      to center everything vertically & horizontally.
+    */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f7; /* Light background */
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 
+      A container to hold the game area.
+      It’s centered in the middle, with some padding,
+      a white background, and a subtle box-shadow.
+    */
+    #game-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      font-weight: normal;
+      letter-spacing: 1px;
+    }
+
+    .word-display {
+      font-size: 1.6rem;
+      font-weight: bold;
+      margin: 1.5rem 0 1rem;
+      color: #333;
+    }
+
+    #user-input {
+      width: 80%;
+      font-size: 1.1rem;
+      padding: 0.6rem;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #user-input:focus {
+      border-color: #0084ff;
+    }
+
+    #start-button {
+      font-size: 1rem;
+      padding: 0.6rem 1.2rem;
+      margin: 1rem 0;
+      cursor: pointer;
+      background: #0084ff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    #start-button:hover {
+      background: #0072db;
+    }
+
+    #feedback {
+      margin: 1rem 0;
+      min-height: 24px;
+      font-size: 1.1rem;
+    }
+    #feedback.correct {
+      color: #28a745;
+    }
+    #feedback.wrong {
+      color: #dc3545;
+    }
+
+    #timer {
+      font-weight: bold;
+      margin-top: 0.5rem;
+      font-size: 1.2rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <h1>Korean Typing Practice (Phase 2)</h1>
+
+    <div id="game-area">
+      <!-- Countdown Timer Display -->
+      <div id="timer">Time Left: 0s</div>
+
+      <!-- Current Korean word -->
+      <div class="word-display" id="target-word">
+        Press "Start Game" to begin!
+      </div>
+
+      <!-- Text field for user input (English) -->
+      <input type="text" id="user-input" disabled />
+
+      <!-- Start Game button -->
+      <div>
+        <button id="start-button">Start Game</button>
+      </div>
+
+      <!-- Feedback message -->
+      <div id="feedback"></div>
+    </div>
+  </div>
+
+  <script>
+    // 1) Define your Korean–English vocabulary list
+    // Now we display the Korean and let the user type ANY valid English meaning.
+    const vocabList = [
+      {
+        korean: "사과",
+        english: ["apple", "apology"]
+      },
+      {
+        korean: "책",
+        english: ["book", "volume"]
+      }
+      // ...add more as needed
+    ];
+
+    // 2) Define 10 five-digit numbers
+
+    const secretCodes2 = ["13806963","90365823","80631873","76788537","41410855","42742382","53812906","13440539","95074939","16962434","39339230","70634259","90748561","35649203","20439482","44494930","93650936","30758766","86775708","30150270","94215743","53894177","37773290","17284892","52696028","98122171","77663335","58613370","96835867","44006027","82528761","78132229","17231404","54155972","97610581","78958994","21461884","45963045","62368750","78377088","74209686","97248149","59996520","74712803","45869222","74985664","59176297","65972219","84057449","65535656","15601578","26123983","45934014","77325691","38995612","66613257","49996020","77584974","10887407","64782378","23493631","99556642","78226374","61592779","72697940","88585626","93668286","81041878","44956372","99732351","37844621","56777853","35492262","20970990","20020740","67677519","81331064","79244787","73647356","24424492","54981392","68496930","35379400","23153625","41517479","21255067","62206430","29538626","34100484","99804715","92026135","19320388","96355460","78796058","71519062","20565707","62318510","59353946","49195023","54305051","62617229","90447126","44506799","20132605","37014590","18766163","72242315","22634399","24466111","64086917","74083160","68463272","66567758","93998339","81136200","15343658","35321981","11740240","53814555","47337238","59909693","15174932","69236499","96030124","40246551","89183306","27819327","37302283","97575992","37788009","76419048","54127393","51694882","92671231","22595225","95636729","98879917","68255292","81654768","96097528","29417287","49273285","78850708","42049327","35030114","42637655","42535968","74348805","85065279","41140543","14476016","81850591","76049098","85828389","45296219","95512010","19536168","42441168","22707077","51869129","22910406","89058856","94993437","40940673","54711529","95746577","63641900","53019737","39115698","83200611","40943623","22008297","36731836","31479219","12988818","32832755","72080672","80950133","93448204","14635752","29604584","24713095","51945576","77556713","32804099","79033592","52656906","61293846","74507475","83101367","59534750","65886883","64660090","40107754","60536770","27617519","74356457","89860199","28024833","29231771"]
+
+    codes = secretCodes2;
+
+    // DOM elements
+    const targetWordElem = document.getElementById("target-word");
+    const userInputElem = document.getElementById("user-input");
+    const feedbackElem = document.getElementById("feedback");
+    const startButton = document.getElementById("start-button");
+    const timerElem = document.getElementById("timer");
+
+    let currentIndex = 0;       // Which vocab pair we're on
+    let totalTimeLimit = 0;     // In ms
+    let timeRemaining = 0;      // In seconds
+    let timerId = null;         // setTimeout for the final cutoff
+    let countdownId = null;     // setInterval for the countdown display
+
+    // Count "syllables" by counting Hangul blocks in a simple way (string length)
+    function countKoreanBlocks(word) {
+      return word.length; // Each Hangul character block → 1 syllable
+    }
+
+    // Shuffle the array in place if you want random order
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    // Calculate total time limit = sum of all blocks * 4 (seconds), for example
+    function calculateTotalTimeLimit() {
+      let totalBlocks = 0;
+      vocabList.forEach(pair => {
+        totalBlocks += countKoreanBlocks(pair.korean);
+      });
+      return totalBlocks * 4 * 1000; // Adjust multiplier as desired
+    }
+
+    // Start the game
+    function startGame() {
+      // Shuffle if desired
+      shuffleArray(vocabList);
+
+      // Reset
+      currentIndex = 0;
+      feedbackElem.textContent = "";
+      feedbackElem.className = "";
+
+      // Enable input
+      userInputElem.disabled = false;
+      userInputElem.value = "";
+      userInputElem.focus();
+      startButton.disabled = true;
+
+      // Calculate total time (ms) and convert to seconds for display
+      totalTimeLimit = calculateTotalTimeLimit();
+      timeRemaining = Math.floor(totalTimeLimit / 1000);
+
+      // Clear any old timers
+      clearTimeout(timerId);
+      clearInterval(countdownId);
+
+      // Display initial time left
+      timerElem.textContent = `Time Left: ${timeRemaining}s`;
+
+      // This timeout ends the game after the total time
+      timerId = setTimeout(() => {
+        endGame();
+      }, totalTimeLimit);
+
+      // Start the countdown display
+      countdownId = setInterval(() => {
+        timeRemaining--;
+        if (timeRemaining <= 0) {
+          timeRemaining = 0;
+          timerElem.textContent = `Time Left: 0s`;
+          clearInterval(countdownId);
+        } else {
+          timerElem.textContent = `Time Left: ${timeRemaining}s`;
+        }
+      }, 1000);
+
+      // Show the first word
+      showCurrentWord();
+    }
+
+    // Display the current Korean word
+    function showCurrentWord() {
+      if (currentIndex >= vocabList.length) {
+        // All words typed correctly
+        endGameEarly(); 
+        return;
+      }
+
+      const currentPair = vocabList[currentIndex];
+      // Just show the Korean
+      targetWordElem.textContent = currentPair.korean;
+
+      userInputElem.value = "";
+      userInputElem.disabled = false;
+      userInputElem.focus();
+    }
+
+    // Check user's input (English)
+    function checkInput() {
+      if (currentIndex >= vocabList.length) {
+        return;
+      }
+
+      const currentPair = vocabList[currentIndex];
+      const userTyped = userInputElem.value.trim().toLowerCase();
+
+      // Ensure we have an array of accepted English words (converted to lowercase)
+      const acceptedAnswers = Array.isArray(currentPair.english)
+        ? currentPair.english.map(e => e.toLowerCase())
+        : [String(currentPair.english).toLowerCase()];
+
+      if (acceptedAnswers.includes(userTyped)) {
+        // Correct
+        feedbackElem.textContent = "Correct!";
+        feedbackElem.className = "correct";
+
+        currentIndex++;
+
+        setTimeout(() => {
+          feedbackElem.textContent = "";
+          feedbackElem.className = "";
+          showCurrentWord();
+        }, 800);
+      } else {
+        // Wrong - stay on the same word
+        feedbackElem.textContent = "Close, but not quite! Try again!";
+        feedbackElem.className = "wrong";
+      }
+    }
+
+    // If user typed all words BEFORE the timer ends
+    function endGameEarly() {
+      clearTimeout(timerId);
+      clearInterval(countdownId);
+
+      userInputElem.disabled = true;
+      startButton.disabled = false;
+
+      // Randomly pick a code from the 10 defined codes
+      const randomCode = codes[Math.floor(Math.random() * codes.length)];
+
+      targetWordElem.textContent = "Congratulations! You've completed the game!";
+      feedbackElem.textContent = `Your code is: ${randomCode}`;
+      feedbackElem.className = "correct";
+    }
+
+    // When total time is up
+    function endGame() {
+      clearInterval(countdownId);
+      userInputElem.disabled = true;
+      startButton.disabled = false;
+
+      if (currentIndex >= vocabList.length) {
+        // All words completed before or right at the time limit
+        const randomCode = codes[Math.floor(Math.random() * codes.length)];
+
+        targetWordElem.textContent = "Congratulations! You've completed the game!";
+        feedbackElem.textContent = `Your code is: ${randomCode}`;
+        feedbackElem.className = "correct";
+      } else {
+        // Not completed in time
+        targetWordElem.textContent = "Time’s up!";
+        feedbackElem.textContent = "You’ve gone over the time. Please try again.";
+        feedbackElem.className = "wrong";
+      }
+    }
+
+    // Event Listeners
+    startButton.addEventListener("click", startGame);
+
+    userInputElem.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        checkInput();
+      }
+    });
+  </script>
+</body>
+</html>
