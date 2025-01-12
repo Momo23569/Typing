@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lessons</title>
+  <style>
+    /* Make sure the html and body take up the full height of the window */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Center everything inside the body (both horizontally and vertically) */
+    body {
+      display: flex;                  /* Use Flexbox layout */
+      justify-content: center;        /* Center horizontally */
+      align-items: center;            /* Center vertically */
+      background-color: #f4f4f4;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      text-align: center;             /* Center text inside this container */
+      background-color: #ffffff;      /* White background */
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 600px;              /* Optional: limit how wide the container gets */
+      width: 90%;                     /* Optional: so it shrinks on smaller screens */
+    }
+
+    h1 {
+      font-size: 3em;                /* Larger heading */
+      color: #333333;
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style: none;              /* Remove default bullet points */
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      display: inline-block;         /* Display list items in a row */
+      margin: 0 15px;
+    }
+
+    a {
+      text-decoration: none;
+      color: #007BFF;
+      font-size: 1.2em;
+      transition: color 0.3s;
+    }
+
+    a:hover {
+      color: #0056b3;                /* Slightly darker on hover */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Lessons</h1>
+    <ul>
+      <li><a href="lesson81/index.html">Lesson 8-1</a></li>
+      <li><a href="lesson82/index.html">Lesson 8-2</a></li>
+      <li><a href="lesson91/index.html">Lesson 9-1</a></li>
+      <!-- etc. -->
+    </ul>
+  </div>
+</body>
+</html>

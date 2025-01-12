@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Korean Typing Practice (Phase 1)</title>
+  <style>
+    /* 禁止选中文本 */
+    html, body {
+      -webkit-user-select: none;  /* Chrome / Safari / iOS */
+      -moz-user-select: none;     /* Firefox */
+      -ms-user-select: none;      /* old IE */
+      user-select: none;          /* 标准 */
+      
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f7;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #game-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      font-weight: normal;
+      letter-spacing: 1px;
+    }
+
+    .word-display {
+      font-size: 1.6rem;
+      font-weight: bold;
+      margin: 1.5rem 0 1rem;
+      color: #333;
+    }
+
+    #user-input {
+      width: 80%;
+      font-size: 1.1rem;
+      padding: 0.6rem;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+      transition: border-color 0.2s;
+      /* 即使禁止文字选中，也允许用户在 input 里选中光标文字，这里可不加 user-select:none; */
+    }
+    #user-input:focus {
+      border-color: #0084ff;
+    }
+
+    #start-button {
+      font-size: 1rem;
+      padding: 0.6rem 1.2rem;
+      margin: 1rem 0;
+      cursor: pointer;
+      background: #0084ff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    #start-button:hover {
+      background: #0072db;
+    }
+
+    #feedback {
+      margin: 1rem 0;
+      min-height: 24px;
+      font-size: 1.1rem;
+    }
+    #feedback.correct {
+      color: #28a745;
+    }
+    #feedback.wrong {
+      color: #dc3545;
+    }
+
+    #timer {
+      font-weight: bold;
+      margin-top: 0.5rem;
+      font-size: 1.2rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <h1>Korean Typing Practice (Phase 1)</h1>
+
+    <div id="game-area">
+      <div id="timer">Time Left: 0s</div>
+      <div class="word-display" id="target-word">
+        Press "Start Game" to begin!
+      </div>
+      <input type="text" id="user-input" disabled />
+      <div>
+        <button id="start-button">Start Game</button>
+      </div>
+      <div id="feedback"></div>
+    </div>
+  </div>
+
+  <script>
+    // 禁用右键菜单
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    }, false);
+
+    // 禁止复制事件
+    document.addEventListener('copy', function(e) {
+      e.preventDefault();
+      // 可选：给用户提示信息
+      alert("复制功能已被禁用。");
+    }, false);
+
+
+    // 你的原有脚本 ...
+    const vocabList = [
+      {
+        korean: "가운데",
+        english: ["the middle", "the center"]
+      },
+      {
+        korean: "건너편",
+        english: ["the other side"]
+      },
+      {
+        korean: "경복궁",
+        english: ["Gyungbok Palace"]
+      },
+      {
+        korean: "광화문",
+        english: ["Gwanghwamun"]
+      },
+      {
+        korean: "교회",
+        english: ["church"]
+      },
+      {
+        korean: "꽃집",
+        english: ["flower shop"]
+      },
+      {
+        korean: "동네",
+        english: ["neighborhood"]
+      },
+      {
+        korean: "서울",
+        english: ["Seoul"]
+      },
+      {
+        korean: "슈퍼",
+        english: ["supermarket"]
+      },
+      {
+        korean: "약국",
+        english: ["pharmacy", "drugstore"]
+      },
+      {
+        korean: "지도",
+        english: ["map"]
+      },
+      {
+        korean: "쪽",
+        english: ["side", "direction"]
+      },
+      {
+        korean: "초등학교",
+        english: ["elementary school"]
+      },
+      {
+        korean: "여기",
+        english: ["here"]
+      },
+      {
+        korean: "거기",
+        english: ["there"]
+      },
+      {
+        korean: "저기",
+        english: ["over there"]
+      },
+      {
+        korean: "내리다",
+        english: ["to get off"]
+      },
+      {
+        korean: "타다",
+        english: ["to get in/on", "ride"]
+      },
+      {
+        korean: "깨끗하다",
+        english: ["to be clean"]
+      },
+      {
+        korean: "따뜻하다",
+        english: ["to be warm"]
+      },
+      {
+        korean: "조용하다",
+        english: ["to be quiet"]
+      },
+      {
+        korean: "여러",
+        english: ["many", "several"]
+      }
+    ];
+
+
+    const secretCodes5 = ["86448071","68344055","19200108","47989584","30701077","93264093","89611807","78922830","85171463","57868802","86035944","92520285","54383198","62875494","81201561","93711113","13533007","80947581","96473117","21807347","54681518","83677006","26113041","53238782","26426408","80753774","78345419","50954973","26378610","92048615","47376038","35371739","65450829","52850476","11816111","23026961","25833155","59867349","98053455","28680658","30868511","60981475","62051453","74496444","96456272","24084802","90672593","73898047","11189544","34404697","50631280","60710762","89925456","21871470","63521305","83778468","25392098","72524147","38466819","57633265","21365062","74591140","67336686","52212048","37446104","13366699","76488218","35254718","39405131","28179563","36382340","57979996","12061782","60444768","71334858","68088590","36109820","65253410","68104839","54032727","49612820","25721828","44622368","83545025","90690966","49876126","46448008","91975676","62801763","93129102","30976077","17413989","67463601","23633675","81734548","16207721","74090841","37078043","12513180","94613772","40936315","50943195","96386733","36702232","19139425","54640322","34339019","92085433","53486527","41089088","55369092","40383483","33347904","85258044","18428392","98080849","12123467","79235032","18492779","49944951","14185394","28181701","69802527","32508697","57818836","20134573","17356718","50003129","88589773","67462019","70748504","46023177","26383864","75861246","84213784","86134437","56575417","68805622","40444856","14716705","45563472","80368646","17692054","97257522","56101488","57226546","76565335","43033656","86890479","93219592","10996210","50442318","14112287","88915452","28339671","60867757","77383794","60680970","36112993","35093890","39363154","42393120","50132484","63943278","35865756","90319041","80693418","97029731","39304561","53781831","19561131","92653319","31284772","13506382","74893242","35004480","55838494","30297647","50991939","46261110","45428133","36259124","16332706","51907972","78354419","37152873","79544330","66585316","91824706","69623804","63119446","68714522","21224252","32046764","91631640","41136636","27304023","82818671","93249118","73092994"]
+
+
+    let codes = secretCodes5;
+
+    const targetWordElem = document.getElementById("target-word");
+    const userInputElem = document.getElementById("user-input");
+    const feedbackElem = document.getElementById("feedback");
+    const startButton = document.getElementById("start-button");
+    const timerElem = document.getElementById("timer");
+
+    let currentIndex = 0;
+    let totalTimeLimit = 0;     
+    let timeRemaining = 0;      
+    let timerId = null;         
+    let countdownId = null;     
+
+    function countKoreanBlocks(word) {
+      // 简化处理：每个完整韩文字母块视为 length=1
+      return word.length;
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function calculateTotalTimeLimit() {
+      let totalBlocks = 0;
+      vocabList.forEach(pair => {
+        totalBlocks += countKoreanBlocks(pair.korean);
+      });
+      return totalBlocks * 4 * 1000; // 每个字符 * 4秒，你可以自己调整
+    }
+
+    function startGame() {
+      shuffleArray(vocabList);
+      currentIndex = 0;
+      feedbackElem.textContent = "";
+      feedbackElem.className = "";
+
+      userInputElem.disabled = false;
+      userInputElem.value = "";
+      userInputElem.focus();
+      startButton.disabled = true;
+
+      totalTimeLimit = calculateTotalTimeLimit();
+      timeRemaining = Math.floor(totalTimeLimit / 1000);
+
+      clearTimeout(timerId);
+      clearInterval(countdownId);
+
+      timerElem.textContent = `Time Left: ${timeRemaining}s`;
+
+      timerId = setTimeout(() => {
+        endGame();
+      }, totalTimeLimit);
+
+      countdownId = setInterval(() => {
+        timeRemaining--;
+        if (timeRemaining <= 0) {
+          timeRemaining = 0;
+          timerElem.textContent = `Time Left: 0s`;
+          clearInterval(countdownId);
+        } else {
+          timerElem.textContent = `Time Left: ${timeRemaining}s`;
+        }
+      }, 1000);
+
+      showCurrentWord();
+    }
+
+    function showCurrentWord() {
+      if (currentIndex >= vocabList.length) {
+        endGameEarly();
+        return;
+      }
+      const currentPair = vocabList[currentIndex];
+      targetWordElem.textContent = `${currentPair.korean} (${currentPair.english})`;
+
+      userInputElem.value = "";
+      userInputElem.disabled = false;
+      userInputElem.focus();
+    }
+
+    function checkInput() {
+      if (currentIndex >= vocabList.length) {
+        return;
+      }
+      const currentPair = vocabList[currentIndex];
+      const userTyped = userInputElem.value.trim();
+
+      if (userTyped === currentPair.korean) {
+        feedbackElem.textContent = "Correct!";
+        feedbackElem.className = "correct";
+        currentIndex++;
+        setTimeout(() => {
+          feedbackElem.textContent = "";
+          feedbackElem.className = "";
+          showCurrentWord();
+        }, 800);
+      } else {
+        feedbackElem.textContent = "Close, but not quite! Try again!";
+        feedbackElem.className = "wrong";
+      }
+    }
+
+    function endGameEarly() {
+      clearTimeout(timerId);
+      clearInterval(countdownId);
+
+      userInputElem.disabled = true;
+      startButton.disabled = false;
+
+      const randomCode = codes[Math.floor(Math.random() * codes.length)];
+      targetWordElem.textContent = "Congratulations! You've completed the game!";
+      feedbackElem.textContent = `Your code is: ${randomCode}`;
+      feedbackElem.className = "correct";
+    }
+
+    function endGame() {
+      clearInterval(countdownId);
+      userInputElem.disabled = true;
+      startButton.disabled = false;
+
+      if (currentIndex >= vocabList.length) {
+        const randomCode = codes[Math.floor(Math.random() * codes.length)];
+        targetWordElem.textContent = "Congratulations! You've completed the game!";
+        feedbackElem.textContent = `Your code is: ${randomCode}`;
+        feedbackElem.className = "correct";
+      } else {
+        targetWordElem.textContent = "Time’s up!";
+        feedbackElem.textContent = "You’ve gone over the time. Please try again.";
+        feedbackElem.className = "wrong";
+      }
+    }
+
+    startButton.addEventListener("click", startGame);
+    userInputElem.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        checkInput();
+      }
+    });
+  </script>
+</body>
+</html>
