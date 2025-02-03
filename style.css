@@ -1,0 +1,180 @@
+ /* Make sure the html and body take up the full height of the window */
+ html,
+ body {
+     -webkit-user-select: none;
+     /* Chrome / Safari / iOS */
+     -moz-user-select: none;
+     /* Firefox */
+     -ms-user-select: none;
+     /* old IE */
+     user-select: none;
+     /* 标准 */
+
+     height: 100%;
+     margin: 0;
+     padding: 0;
+ }
+
+ /* Center everything inside the body (both horizontally and vertically) */
+ body {
+     display: flex;
+     /* Use Flexbox layout */
+     justify-content: center;
+     /* Center horizontally */
+     align-items: center;
+     /* Center vertically */
+     background-color: #f4f4f4;
+     font-family: Arial, sans-serif;
+ }
+
+ .container {
+     text-align: center;
+     /* Center text inside this container */
+     background-color: #ffffff;
+     /* White background */
+     padding: 20px;
+     border-radius: 8px;
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+     max-width: 600px;
+     /* Optional: limit how wide the container gets */
+     width: 90%;
+     /* Optional: so it shrinks on smaller screens */
+ }
+
+ h1 {
+     font-size: 3em;
+     /* Larger heading */
+     color: #333333;
+     margin-bottom: 1rem;
+     font-weight: normal;
+     letter-spacing: 1px;
+ }
+
+ ul {
+     list-style: none;
+     /* Remove default bullet points */
+     margin: 0;
+     padding: 0;
+ }
+
+ li {
+     display: inline-block;
+     /* Display list items in a row */
+     margin: 0 15px;
+ }
+
+ a {
+     text-decoration: none;
+     color: #007BFF;
+     font-size: 1.2em;
+     transition: color 0.3s;
+ }
+
+ a:hover {
+     color: #0056b3;
+     /* Slightly darker on hover */
+ }
+
+
+
+ nav {
+     margin-bottom: 20px;
+ }
+
+ nav ul {
+     list-style: none;
+     /* Remove bullet points */
+     padding: 0;
+     margin: 0;
+ }
+
+ nav li {
+     display: inline-block;
+     /* Horizontal menu */
+     margin: 0 15px;
+ }
+
+ nav a {
+     text-decoration: none;
+     font-size: 1.2em;
+     /* Increase link text size */
+     color: #007BFF;
+     /* Blue link color */
+     transition: color 0.3s;
+ }
+
+ nav a:hover {
+     color: #0056b3;
+     /* Slightly darker on hover */
+ }
+
+ #game-container {
+     background: #fff;
+     padding: 2rem;
+     border-radius: 10px;
+     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+     width: 100%;
+     max-width: 600px;
+     text-align: center;
+ }
+
+
+ .word-display {
+     font-size: 1.6rem;
+     font-weight: bold;
+     margin: 1.5rem 0 1rem;
+     color: #333;
+ }
+
+ #user-input {
+     width: 80%;
+     font-size: 1.1rem;
+     padding: 0.6rem;
+     text-align: center;
+     border: 1px solid #ccc;
+     border-radius: 6px;
+     outline: none;
+     transition: border-color 0.2s;
+     /* 即使禁止文字选中，也允许用户在 input 里选中光标文字，这里可不加 user-select:none; */
+ }
+
+ #user-input:focus {
+     border-color: #0084ff;
+ }
+
+ #start-button {
+     font-size: 1rem;
+     padding: 0.6rem 1.2rem;
+     margin: 1rem 0;
+     cursor: pointer;
+     background: #0084ff;
+     color: #fff;
+     border: none;
+     border-radius: 6px;
+     transition: background 0.2s;
+ }
+
+ #start-button:hover {
+     background: #0072db;
+ }
+
+ #feedback {
+     margin: 1rem 0;
+     min-height: 24px;
+     font-size: 1.1rem;
+ }
+
+ #feedback.correct {
+     color: #28a745;
+ }
+
+ #feedback.wrong {
+     color: #dc3545;
+ }
+
+ #timer {
+     font-weight: bold;
+     margin-top: 0.5rem;
+     font-size: 1.2rem;
+     color: #555;
+ }
